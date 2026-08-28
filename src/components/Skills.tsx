@@ -1,69 +1,118 @@
 import React from "react";
-import { FaAws, FaDocker, FaLinux, FaGitAlt, FaGithub, FaPython, FaDatabase, FaTerminal } from "react-icons/fa";
-import { SiFlask, SiFastapi } from "react-icons/si";
+import { motion } from "framer-motion";
+import { 
+  FaAws, 
+  FaDocker, 
+  FaLinux, 
+  FaServer, 
+  FaDatabase, 
+  FaLock, 
+  FaNetworkWired, 
+  FaBolt, 
+  FaCodeBranch, 
+  FaPython 
+} from "react-icons/fa";
+import { SiFlask, SiFastapi, SiJenkins, SiGithubactions } from "react-icons/si";
 
 export const Skills: React.FC = () => {
   const skillCategories = [
     {
-      title: "Cloud & DevOps",
+      id: "01",
+      title: "CLOUD",
       skills: [
-        { name: "AWS", icon: <FaAws className="w-5 h-5 text-orange-500" /> },
-        { name: "Docker", icon: <FaDocker className="w-5 h-5 text-blue-500" /> },
-        { name: "Linux", icon: <FaLinux className="w-5 h-5 text-gray-700" /> },
-        { name: "Git", icon: <FaGitAlt className="w-5 h-5 text-orange-600" /> },
-        { name: "GitHub", icon: <FaGithub className="w-5 h-5 text-gray-900" /> },
+        { name: "AWS", icon: <FaAws className="w-4 h-4" /> },
+        { name: "EC2", icon: <FaServer className="w-4 h-4" /> },
+        { name: "S3", icon: <FaDatabase className="w-4 h-4" /> },
+        { name: "IAM", icon: <FaLock className="w-4 h-4" /> },
+        { name: "VPC", icon: <FaNetworkWired className="w-4 h-4" /> },
+        { name: "Lambda", icon: <FaBolt className="w-4 h-4" /> },
       ],
     },
     {
-      title: "Programming & Backend",
+      id: "02",
+      title: "DEVOPS",
       skills: [
-        { name: "Python", icon: <FaPython className="w-5 h-5 text-blue-600" /> },
-        { name: "Flask", icon: <SiFlask className="w-5 h-5 text-gray-800" /> },
-        { name: "FastAPI", icon: <SiFastapi className="w-5 h-5 text-teal-600" /> },
-        { name: "SQL", icon: <FaDatabase className="w-5 h-5 text-indigo-600" /> },
-        { name: "Bash", icon: <FaTerminal className="w-5 h-5 text-green-600" /> },
+        { name: "Docker", icon: <FaDocker className="w-4 h-4" /> },
+        { name: "Jenkins", icon: <SiJenkins className="w-4 h-4" /> },
+        { name: "GitHub Actions", icon: <SiGithubactions className="w-4 h-4" /> },
+        { name: "Linux", icon: <FaLinux className="w-4 h-4" /> },
+        { name: "CI/CD", icon: <FaCodeBranch className="w-4 h-4" /> },
+      ],
+    },
+    {
+      id: "03",
+      title: "BACKEND",
+      skills: [
+        { name: "Python", icon: <FaPython className="w-4 h-4" /> },
+        { name: "Flask", icon: <SiFlask className="w-4 h-4" /> },
+        { name: "FastAPI", icon: <SiFastapi className="w-4 h-4" /> },
+        { name: "SQL", icon: <FaDatabase className="w-4 h-4" /> },
       ],
     },
   ];
 
   return (
-    <section id="skills" className="py-20 px-6 md:px-8 bg-gray-50/30 border-t border-gray-100">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center md:text-left mb-12">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-4 relative inline-block">
-            Skills & Expertise
-            <span className="absolute bottom-0 left-0 w-1/2 h-[3px] bg-brand-red md:w-12"></span>
-          </h2>
-          <p className="text-sm text-gray-500 uppercase tracking-widest mt-4">
-            Technical Toolkit
-          </p>
+    <section 
+      id="skills" 
+      className="py-24 px-6 md:px-12 bg-bg-warm border-b border-border-hairline relative"
+    >
+      <div className="max-w-6xl mx-auto">
+        {/* Editorial Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-6 border-b border-border-hairline">
+          <div className="flex flex-col">
+            <span className="font-mono text-[10px] tracking-widest text-brand-red font-bold mb-4 uppercase">
+              02 // TOOLKIT
+            </span>
+            <h2 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-text-dark">
+              Skills &amp; Expertise
+            </h2>
+          </div>
+          <div className="font-mono text-xs text-text-muted mt-4 md:mt-0 uppercase tracking-widest">
+            ENGINEERING SPECIFICATION // V4.3
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {skillCategories.map((category) => (
-            <div 
-              key={category.title} 
-              className="p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+        {/* 3-Column Categorized Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
+          {skillCategories.map((category, idx) => (
+            <motion.div
+              key={category.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: idx * 0.1 }}
+              className="flex flex-col"
             >
-              <h3 className="text-lg font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100 flex items-center justify-between">
-                <span>{category.title}</span>
-                <span className="w-1.5 h-1.5 bg-brand-red rounded-full"></span>
-              </h3>
+              {/* Category Title Header */}
+              <div className="flex items-baseline gap-2 mb-6">
+                <span className="font-display text-2xl font-bold text-brand-red/90">{category.id}</span>
+                <span className="font-mono text-[10px] text-text-muted">/</span>
+                <h3 className="font-mono text-sm tracking-wider font-bold text-text-dark uppercase">
+                  {category.title}
+                </h3>
+              </div>
 
-              <div className="flex flex-wrap gap-3">
+              {/* Skills Row Stack */}
+              <div className="flex flex-col divide-y divide-border-hairline/60 border-t border-b border-border-hairline/60">
                 {category.skills.map((skill) => (
                   <div
                     key={skill.name}
-                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-gray-50 border border-gray-200/60 text-sm font-medium text-gray-700 hover:bg-red-50 hover:border-red-100 hover:text-brand-red transition-all duration-300 group"
+                    className="flex items-center justify-between py-3.5 group hover:bg-white/40 transition-colors duration-200 px-2 -mx-2"
                   >
-                    <span className="group-hover:scale-110 transition-transform duration-300">
-                      {skill.icon}
-                    </span>
-                    <span>{skill.name}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-text-muted group-hover:text-brand-red group-hover:scale-110 transition-all duration-300">
+                        {skill.icon}
+                      </span>
+                      <span className="font-mono text-xs font-semibold text-text-dark/95 group-hover:text-brand-red transition-colors duration-200">
+                        {skill.name}
+                      </span>
+                    </div>
+                    {/* Small technical indicator dot */}
+                    <span className="w-1.5 h-1.5 bg-border-hairline rounded-full group-hover:bg-brand-red transition-all duration-300"></span>
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

@@ -12,65 +12,75 @@ const CONTACT_LINKS = {
 
 export const Contact: React.FC = () => {
   return (
-    <section id="contact" className="py-20 px-6 md:px-8 bg-gray-50/50 border-t border-gray-100">
-      <div className="max-w-4xl mx-auto text-center">
-        {/* Heading */}
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-4 relative inline-block">
-          Let's Build Something Great
-          <span className="absolute bottom-0 left-0 w-1/2 h-[3px] bg-brand-red md:w-12"></span>
-        </h2>
-        
-        <p className="text-base text-gray-600 max-w-lg mx-auto leading-relaxed mt-4 mb-10">
-          I am always open to discussing cloud architecture, python scripting, backend development opportunities, or project collaborations.
-        </p>
+    <section 
+      id="contact" 
+      className="py-24 px-6 md:px-12 bg-bg-warm border-b border-border-hairline relative"
+    >
+      <div className="max-w-6xl mx-auto">
+        {/* Large Editorial Headline */}
+        <div className="flex flex-col mb-4">
+          <span className="font-mono text-[10px] tracking-widest text-brand-red font-bold mb-4 uppercase">
+            04 // CONNECT
+          </span>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-text-dark leading-[1.0] mb-8">
+            Have an idea?<br />
+            <span className="text-brand-red">Let's build something reliable.</span>
+          </h2>
+        </div>
 
-        {/* Contact Links Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
-          {/* Email */}
-          <a
-            href={CONTACT_LINKS.email}
-            className="flex flex-col items-center gap-3 p-6 bg-white border border-gray-100 hover:border-red-100 hover:shadow-md rounded-xl transition-all duration-300 group"
-          >
-            <div className="p-3 bg-red-50 text-brand-red group-hover:bg-brand-red group-hover:text-white rounded-full transition-all duration-300">
-              <FaEnvelope size={22} />
-            </div>
-            <span className="text-sm font-semibold text-gray-900">Email Me</span>
-            <span className="text-xs text-gray-500 truncate max-w-full">
-              {CONTACT_LINKS.email.replace("mailto:", "")}
-            </span>
-          </a>
+        {/* 2-Column Contact Info */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12 border-t border-border-hairline pt-12">
+          {/* Left Side: Summary & Primary email CTA */}
+          <div className="lg:col-span-6 flex flex-col justify-start">
+            <p className="text-sm md:text-base text-text-muted leading-relaxed mb-8 max-w-sm">
+              I am always open to discussing cloud architecture, Python backend pipelines, DevOps automation opportunities, or project collaborations.
+            </p>
+            
+            <a
+              href={CONTACT_LINKS.email}
+              className="inline-flex items-center justify-center gap-3 px-6 py-4 bg-brand-red hover:bg-brand-red-hover text-white font-mono text-xs uppercase tracking-widest font-semibold transition-all duration-300 hover:shadow-lg w-full sm:w-auto self-start border border-brand-red"
+            >
+              <FaEnvelope />
+              <span>Send Message</span>
+              <span className="text-white/60 font-normal">|</span>
+              <span className="text-white/80 lowercase">{CONTACT_LINKS.email.replace("mailto:", "")}</span>
+            </a>
+          </div>
 
-          {/* LinkedIn */}
-          <a
-            href={CONTACT_LINKS.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center gap-3 p-6 bg-white border border-gray-100 hover:border-red-100 hover:shadow-md rounded-xl transition-all duration-300 group"
-          >
-            <div className="p-3 bg-red-50 text-brand-red group-hover:bg-brand-red group-hover:text-white rounded-full transition-all duration-300">
-              <FaLinkedin size={22} />
-            </div>
-            <span className="text-sm font-semibold text-gray-900">LinkedIn</span>
-            <span className="text-xs text-gray-500 truncate max-w-full">
-              Connect on LinkedIn
-            </span>
-          </a>
+          {/* Right Side: Other Technical Channels */}
+          <div className="lg:col-span-6 flex flex-col divide-y divide-border-hairline">
+            {/* LinkedIn row */}
+            <a 
+              href={CONTACT_LINKS.linkedin} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="py-4.5 flex items-center justify-between group hover:bg-white/40 transition-colors duration-250 px-2 -mx-2"
+            >
+              <div className="flex items-center gap-3">
+                <FaLinkedin className="text-text-muted group-hover:text-brand-red transition-colors" size={16} />
+                <span className="font-mono text-xs text-text-muted uppercase tracking-wider">LinkedIn</span>
+              </div>
+              <span className="text-xs sm:text-sm font-semibold text-text-dark group-hover:text-brand-red transition-colors duration-200">
+                linkedin.com/in/manobala
+              </span>
+            </a>
 
-          {/* GitHub */}
-          <a
-            href={CONTACT_LINKS.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center gap-3 p-6 bg-white border border-gray-100 hover:border-red-100 hover:shadow-md rounded-xl transition-all duration-300 group"
-          >
-            <div className="p-3 bg-red-50 text-brand-red group-hover:bg-brand-red group-hover:text-white rounded-full transition-all duration-300">
-              <FaGithub size={22} />
-            </div>
-            <span className="text-sm font-semibold text-gray-900">GitHub</span>
-            <span className="text-xs text-gray-500 truncate max-w-full">
-              View Repositories
-            </span>
-          </a>
+            {/* GitHub row */}
+            <a 
+              href={CONTACT_LINKS.github} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="py-4.5 flex items-center justify-between group hover:bg-white/40 transition-colors duration-250 px-2 -mx-2"
+            >
+              <div className="flex items-center gap-3">
+                <FaGithub className="text-text-muted group-hover:text-brand-red transition-colors" size={16} />
+                <span className="font-mono text-xs text-text-muted uppercase tracking-wider">GitHub</span>
+              </div>
+              <span className="text-xs sm:text-sm font-semibold text-text-dark group-hover:text-brand-red transition-colors duration-200">
+                github.com/manobala
+              </span>
+            </a>
+          </div>
         </div>
       </div>
     </section>

@@ -7,7 +7,6 @@ export const Header: React.FC = () => {
   const [activeSection, setActiveSection] = useState("home");
 
   const navItems = [
-    { label: "Home", href: "#home" },
     { label: "About", href: "#about" },
     { label: "Skills", href: "#skills" },
     { label: "Projects", href: "#projects" },
@@ -17,8 +16,14 @@ export const Header: React.FC = () => {
   // Highlight active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100; // Offset for sticky header
+      const scrollPosition = window.scrollY + 120; // Offset for sticky header
       
+      // Special case for home (top of page)
+      if (window.scrollY < 100) {
+        setActiveSection("home");
+        return;
+      }
+
       for (const item of navItems) {
         const target = document.querySelector(item.href);
         if (target) {
@@ -40,28 +45,37 @@ export const Header: React.FC = () => {
     setIsOpen(false);
     const target = document.querySelector(href);
     if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
+      const headerOffset = 64;
+      const elementPosition = target.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+
       setActiveSection(href.substring(1));
-      // Update browser URL hash without jump
       window.history.pushState(null, "", href);
     }
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 w-full transition-all duration-300">
-      <div className="max-w-6xl mx-auto px-6 md:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo */}
+    <header className="sticky top-0 z-50 bg-bg-warm/80 backdrop-blur-md border-b border-border-hairline w-full transition-all duration-300">
+      <div className="max-w-6xl mx-auto px-6 md:px-12 h-16 flex items-center justify-between">
+        {/* Brand Logo - Small, minimal, technical */}
         <a 
           href="#home" 
           onClick={(e) => handleNavClick(e, "#home")}
-          className="text-xl font-bold tracking-wider text-gray-900 flex items-center gap-1.5"
+          className="font-mono text-xs tracking-widest text-text-dark flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          <span className="w-2.5 h-2.5 bg-brand-red rounded-full"></span>
-          MANO
+          <span className="w-1.5 h-1.5 bg-brand-red rounded-full"></span>
+          <span className="font-bold">M. BALA</span>
+          <span className="text-gray-300">/</span>
+          <span className="text-text-muted font-medium">CLOUD ENGINEER</span>
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden md:flex items-center space-x-10">
           {navItems.map((item) => {
             const isActive = activeSection === item.href.substring(1);
             return (
@@ -69,15 +83,15 @@ export const Header: React.FC = () => {
                 key={item.label}
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.href)}
-                className={`text-sm font-medium tracking-wide transition-colors duration-300 relative py-2 ${
-                  isActive ? "text-brand-red" : "text-gray-600 hover:text-gray-900"
+                className={`text-xs font-mono uppercase tracking-widest transition-colors duration-300 relative py-2 ${
+                  isActive ? "text-brand-red" : "text-text-muted hover:text-text-dark"
                 }`}
               >
                 {item.label}
                 {isActive && (
                   <motion.span 
                     layoutId="activeIndicator"
-                    className="absolute bottom-0 left-0 w-full h-[2px] bg-brand-red"
+                    className="absolute bottom-0 left-0 w-full h-[1.5px] bg-brand-red"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -89,10 +103,10 @@ export const Header: React.FC = () => {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden p-2 text-gray-600 hover:text-gray-900 focus:outline-none"
+          className="md:hidden p-2 text-text-dark hover:text-brand-red focus:outline-none transition-colors"
           aria-label="Toggle menu"
         >
-          {isOpen ? <HiX size={24} /> : <HiMenu size={24} />}
+          {isOpen ? <HiX size={20} /> : <HiMenu size={20} />}
         </button>
       </div>
 
@@ -100,13 +114,13 @@ export const Header: React.FC = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="md:hidden border-t border-gray-100 bg-white shadow-lg overflow-hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-16 left-0 w-full border-b border-border-hairline bg-bg-warm/95 backdrop-blur-md shadow-sm overflow-hidden md:hidden z-40"
           >
-            <div className="px-6 py-4 flex flex-col space-y-4">
+            <div className="px-6 py-6 flex flex-col space-y-4">
               {navItems.map((item) => {
                 const isActive = activeSection === item.href.substring(1);
                 return (
@@ -114,8 +128,8 @@ export const Header: React.FC = () => {
                     key={item.label}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`text-base font-semibold py-1.5 transition-colors duration-200 block ${
-                      isActive ? "text-brand-red pl-2 border-l-2 border-brand-red" : "text-gray-600 hover:text-gray-900"
+                    className={`text-xs font-mono uppercase tracking-widest py-2 transition-colors duration-200 block ${
+                      isActive ? "text-brand-red border-l-2 border-brand-red pl-3" : "text-text-muted hover:text-text-dark pl-3"
                     }`}
                   >
                     {item.label}

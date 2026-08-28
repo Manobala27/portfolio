@@ -7,7 +7,7 @@ import { Contact } from "./components/Contact";
 
 function App() {
   return (
-    <div className="relative min-h-screen w-full bg-white text-gray-900 selection:bg-brand-red/10 selection:text-brand-red font-sans antialiased">
+    <div className="relative min-h-screen w-full bg-bg-warm text-text-dark selection:bg-brand-red/10 selection:text-brand-red font-sans antialiased">
       {/* Navigation Header */}
       <Header />
       
@@ -20,10 +20,17 @@ function App() {
         <Contact />
       </main>
 
-      {/* Simple Footer */}
-      <footer className="py-8 bg-white border-t border-gray-100 text-center">
-        <div className="max-w-4xl mx-auto px-6 text-sm text-gray-500 font-medium">
-          © 2026 Mano Bala
+      {/* Editorial Footer */}
+      <footer className="py-12 bg-bg-warm border-t border-border-hairline">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="font-mono text-[10px] text-text-muted tracking-wider uppercase">
+            © 2026 MANO BALA // ALL RIGHTS RESERVED
+          </div>
+          <div className="font-mono text-[10px] text-text-muted tracking-wider uppercase flex items-center gap-6">
+            <span>REGION: GLOBAL (US-EAST-1)</span>
+            <span className="text-border-hairline">|</span>
+            <span>SYSTEM STATE: ACTIVE</span>
+          </div>
         </div>
       </footer>
     </div>
