@@ -1,26 +1,74 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { FaAws, FaPython, FaDocker, FaCloud, FaBolt, FaWhatsapp } from "react-icons/fa";
+import manoPortrait from "../assets/mano_portrait.jpg";
 
 export const Hero: React.FC = () => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const whatsappUrl = "https://wa.me/919344705377?text=Hi%20Mano!%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20connect.";
+
+  // Mouse tilt effect for interactive illustration/portrait on desktop
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 180 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  const rotateX = useTransform(smoothY, [-120, 120], [6, -6]);
+  const rotateY = useTransform(smoothX, [-120, 120], [-6, 6]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.matchMedia("(pointer: fine)").matches) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      mouseX.set(x);
+      mouseY.set(y);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+    setIsHovered(false);
+  };
+
+  // Bi-directional repeatable entrance animation
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.1,
+        delayChildren: 0.05,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
+    hidden: { y: 30, opacity: 0, scale: 0.97 },
     visible: {
       y: 0,
       opacity: 1,
+      scale: 1,
       transition: {
-        duration: 0.8,
-        ease: [0.16, 1, 0.3, 1] as [number, number, number, number], // easeOutExpo
+        duration: 0.5,
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+      },
+    },
+  };
+
+  const portraitVariants = {
+    hidden: { opacity: 0, scale: 0.94, y: 30 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
       },
     },
   };
@@ -29,7 +77,7 @@ export const Hero: React.FC = () => {
     e.preventDefault();
     const target = document.querySelector(targetId);
     if (target) {
-      const headerOffset = 64;
+      const headerOffset = 80;
       const elementPosition = target.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -44,266 +92,179 @@ export const Hero: React.FC = () => {
   return (
     <section 
       id="home" 
-      className="relative min-h-[calc(100vh-64px)] flex items-center justify-center py-16 px-6 md:px-12 bg-bg-warm overflow-hidden border-b border-border-hairline grid-lines-pattern"
+      className="relative min-h-[92vh] flex items-center justify-center pt-28 pb-16 px-6 md:px-12 overflow-hidden dots-pattern"
     >
-      {/* Editorial grid line overlays */}
-      <div className="absolute inset-y-0 left-0 w-full pointer-events-none z-0">
-        <div className="max-w-6xl mx-auto h-full w-full relative">
-          {/* Vertical layout lines */}
-          <div className="absolute left-0 top-0 w-[1px] h-full bg-border-hairline" />
-          <div className="absolute right-0 top-0 w-[1px] h-full bg-border-hairline" />
-          <div className="absolute left-[58.333%] top-0 w-[1px] h-full bg-border-hairline hidden lg:block" />
-          
-          {/* Horizontal decorative layout line */}
-          <div className="absolute top-[20%] left-0 w-full h-[1px] bg-border-hairline" />
-          <div className="absolute bottom-[15%] left-0 w-full h-[1px] bg-border-hairline" />
-        </div>
+      {/* Decorative soft blurred ambient lights */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[8%] right-[-5%] w-[350px] h-[350px] sm:w-[600px] sm:h-[600px] bg-brand-red/6 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-[5%] left-[-5%] w-[350px] h-[350px] sm:w-[600px] sm:h-[600px] bg-[#FFEBE1] rounded-full blur-3xl" />
+        <div className="absolute top-[40%] left-[25%] w-[250px] h-[250px] bg-orange-200/10 rounded-full blur-2xl" />
       </div>
 
-      <div className="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10 py-8">
-        {/* Left Column: Asymmetrical Editorial Text Content */}
+      {/* Floating subtle ambient stars */}
+      <div className="absolute top-24 left-[15%] text-brand-red/20 text-2xl animate-spin [animation-duration:14s] select-none pointer-events-none">⭐</div>
+      <div className="absolute bottom-24 right-[20%] text-brand-red/20 text-3xl animate-bounce select-none pointer-events-none">✨</div>
+      <div className="absolute top-44 right-[12%] text-brand-red/25 text-xl select-none pointer-events-none">🌟</div>
+
+      <div className="max-w-5xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center relative z-10">
+        {/* Left Column: Welcome Copy & CTAs */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
           className="lg:col-span-7 flex flex-col justify-center text-left"
         >
-          {/* Section Indicator */}
-          <motion.span 
-            variants={itemVariants} 
-            className="font-mono text-[10px] tracking-widest text-brand-red font-bold mb-4 uppercase"
-          >
-            00 // INITIATE PORTFOLIO
-          </motion.span>
-
-          {/* Status Badge */}
+          {/* Welcome Tag */}
           <motion.div 
             variants={itemVariants} 
-            className="inline-flex items-center gap-2 self-start px-2.5 py-1 rounded bg-white border border-border-hairline mb-8"
+            className="inline-flex items-center gap-2 self-start px-4 py-1.5 bg-[#FFF0EC] border border-brand-red/15 rounded-full rotate-[-1.5deg] shadow-xs mb-5 hover:rotate-0 transition-transform cursor-default"
           >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-red opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-red"></span>
-            </span>
-            <span className="font-mono text-[9px] font-semibold tracking-widest text-text-dark uppercase">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            <span className="font-display text-xs sm:text-sm font-black text-brand-red uppercase tracking-wider">
               Available for Opportunities
             </span>
           </motion.div>
 
-          {/* Massive Typography Name */}
+          {/* Name & Greeting */}
           <motion.h1 
             variants={itemVariants}
-            className="font-display text-6xl sm:text-7xl md:text-8xl font-bold tracking-tight text-text-dark leading-[0.9] mb-6 flex flex-col"
+            className="font-display text-5xl sm:text-6xl md:text-7xl font-black text-text-dark tracking-tight leading-[1.08] mb-3"
           >
-            <span>Mano</span>
-            <span className="text-brand-red flex items-center gap-3">
-              Bala
-              <span className="w-2.5 h-2.5 bg-brand-red rounded-full inline-block"></span>
-            </span>
+            Hey, I'm <span className="text-brand-red underline decoration-wavy decoration-brand-red/25">Mano</span> 👋
           </motion.h1>
 
-          {/* Role */}
+          {/* Professional Identity Subtitle */}
           <motion.div 
             variants={itemVariants}
-            className="font-mono text-xs md:text-sm font-semibold text-text-dark tracking-wider mb-6 flex items-center gap-2"
+            className="font-display text-xl sm:text-2xl md:text-3xl font-extrabold text-text-dark/95 leading-snug mb-5 flex items-center gap-2 flex-wrap"
           >
-            <span className="text-text-muted">ROLE:</span>
-            <span>CLOUD ENGINEER</span>
-            <span className="text-brand-red">&amp;</span>
-            <span>PYTHON DEVELOPER</span>
+            <span>Cloud Engineer &amp; Python Developer</span>
+            <span className="text-brand-red select-none">☁️</span>
           </motion.div>
 
-          {/* Statement Statement */}
-          <motion.blockquote 
-            variants={itemVariants}
-            className="border-l-2 border-brand-red pl-4 text-base md:text-lg font-display font-medium text-text-dark/95 leading-relaxed mb-6 max-w-xl"
-          >
-            "Building secure cloud systems and turning ideas into scalable infrastructure."
-          </motion.blockquote>
-
-          {/* Short supporting paragraph */}
+          {/* Persona Statement */}
           <motion.p 
             variants={itemVariants}
-            className="text-sm md:text-base text-text-muted leading-relaxed mb-10 max-w-lg"
+            className="text-base sm:text-lg text-text-muted leading-relaxed mb-8 max-w-xl font-medium"
           >
-            I architect cloud platforms, automate delivery pipelines, and build robust backend interfaces using Python and Amazon Web Services. Focused on modular patterns, secure access policies, and clean code.
+            I build cloud applications, automate workflows, and turn ideas into working systems.
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* Playful Buttons with Micro-interactions */}
           <motion.div 
             variants={itemVariants}
-            className="flex flex-row items-center gap-4 flex-wrap"
+            className="flex flex-row items-center gap-3.5 flex-wrap"
           >
             <a
               href="#projects"
               onClick={(e) => handleScrollTo(e, "#projects")}
-              className="inline-flex items-center justify-center px-6 py-3 bg-brand-red hover:bg-brand-red-hover text-white font-mono text-xs uppercase tracking-widest font-semibold transition-all duration-300 hover:shadow-md cursor-pointer border border-brand-red hover:border-brand-red-hover"
+              className="inline-flex items-center gap-2.5 justify-center px-6 py-3.5 bg-brand-red hover:bg-brand-red-hover text-white font-sans text-sm font-extrabold rounded-full shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer group"
             >
-              View Projects
+              <span className="group-hover:translate-x-0.5 transition-transform">🚀 View My Work</span>
             </a>
+            
+            {/* Direct WhatsApp "Let's Talk" Button */}
             <a
-              href="#contact"
-              onClick={(e) => handleScrollTo(e, "#contact")}
-              className="inline-flex items-center justify-center px-6 py-3 bg-white border border-text-dark hover:bg-text-dark hover:text-white text-text-dark font-mono text-xs uppercase tracking-widest font-semibold transition-all duration-300 cursor-pointer"
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 justify-center px-6 py-3.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-sans text-sm font-extrabold rounded-full shadow-xs hover:shadow-md transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer group"
             >
-              Contact Me
+              <FaWhatsapp className="text-base group-hover:rotate-12 transition-transform" />
+              <span>Let's Talk →</span>
             </a>
           </motion.div>
         </motion.div>
 
-        {/* Right Column: Premium Interactive Cloud Blueprint diagram */}
-        <div className="lg:col-span-5 flex items-center justify-center relative min-h-[350px] lg:min-h-[500px]">
-          {/* Subtle outer coordinate marks for engineering look */}
-          <div className="absolute top-0 left-0 font-mono text-[9px] text-text-muted/40">SYS_REF: [87.2, 14.9]</div>
-          <div className="absolute top-0 right-0 font-mono text-[9px] text-text-muted/40">REG: [us-east-1]</div>
-          <div className="absolute bottom-0 left-0 font-mono text-[9px] text-text-muted/40">PORT: [80/443]</div>
-          <div className="absolute bottom-0 right-0 font-mono text-[9px] text-text-muted/40">SEC: [TLS_1.3]</div>
-
-          {/* Core SVG Graphic with floating lines */}
+        {/* Right Column: Hero Portrait in Organic Frame with Subtle Parallax & Badges */}
+        <div 
+          className="lg:col-span-5 flex items-center justify-center relative min-h-[360px] lg:min-h-[460px]"
+          onMouseMove={handleMouseMove}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={handleMouseLeave}
+        >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="w-full h-full max-w-[420px] max-h-[420px] aspect-square border border-border-hairline bg-white/70 p-6 shadow-sm backdrop-blur-sm relative"
+            variants={portraitVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.2 }}
+            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            className="w-full max-w-[340px] sm:max-w-[370px] relative flex items-center justify-center cursor-default"
           >
-            {/* SVG Content */}
-            <svg 
-              viewBox="0 0 400 400" 
-              className="w-full h-full text-text-dark" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
+            {/* Layered Decorative Backdrop Cards with Playful Tilts */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#FFE7E0] to-[#FFF0E6] border-2 border-brand-red/15 rounded-[3rem] rotate-3 -z-10 shadow-sm transition-transform duration-300 group-hover:rotate-4" />
+            <div className="absolute inset-0 bg-white/85 backdrop-blur-xs border border-brand-red/20 rounded-[3rem] -rotate-2 -z-10 shadow-md" />
+
+            {/* Organic Container for Mano's Portrait */}
+            <div className="relative w-full aspect-[4/4.6] rounded-[2.8rem] overflow-hidden border-2 border-brand-red/25 bg-gradient-to-b from-[#FFF5F0] via-white to-[#FFEFEA] portrait-glow">
+              <img
+                src={manoPortrait}
+                alt="Manobala K — Cloud Engineer & Python Developer"
+                className="w-full h-full object-cover object-top filter contrast-[1.02] brightness-[1.01] hover:scale-103 transition-transform duration-500"
+                loading="eager"
+              />
+              
+              {/* Subtle bottom gradient overlay for smooth visual blending */}
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#2B2A30]/20 via-transparent to-transparent pointer-events-none" />
+            </div>
+
+            {/* Floating Tech Badges around the Portrait */}
+            <motion.div
+              animate={{ 
+                y: isHovered ? [0, -5, 0] : [0, -9, 0], 
+                rotate: [-2, 3, -2] 
+              }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              className="absolute -top-3.5 left-2 bg-white/95 backdrop-blur-xs border border-brand-red/20 rounded-full px-3.5 py-1.5 shadow-sm text-xs font-black font-display text-[#FF9900] flex items-center gap-1.5 select-none hover:scale-110 transition-transform cursor-pointer"
             >
-              {/* Grid Lines inside container */}
-              <line x1="50" y1="50" x2="350" y2="50" stroke="rgba(17,17,17,0.04)" strokeDasharray="3 3"/>
-              <line x1="50" y1="150" x2="350" y2="150" stroke="rgba(17,17,17,0.04)" strokeDasharray="3 3"/>
-              <line x1="50" y1="250" x2="350" y2="250" stroke="rgba(17,17,17,0.04)" strokeDasharray="3 3"/>
-              <line x1="50" y1="350" x2="350" y2="350" stroke="rgba(17,17,17,0.04)" strokeDasharray="3 3"/>
-              
-              <line x1="50" y1="50" x2="50" y2="350" stroke="rgba(17,17,17,0.04)" strokeDasharray="3 3"/>
-              <line x1="150" y1="50" x2="150" y2="350" stroke="rgba(17,17,17,0.04)" strokeDasharray="3 3"/>
-              <line x1="250" y1="50" x2="250" y2="350" stroke="rgba(17,17,17,0.04)" strokeDasharray="3 3"/>
-              <line x1="350" y1="50" x2="350" y2="350" stroke="rgba(17,17,17,0.04)" strokeDasharray="3 3"/>
+              <FaAws className="text-base" /> <span>AWS</span>
+            </motion.div>
+            
+            <motion.div
+              animate={{ 
+                y: isHovered ? [0, 5, 0] : [0, 8, 0], 
+                rotate: [3, -3, 3] 
+              }}
+              transition={{ repeat: Infinity, duration: 4.8, ease: "easeInOut", delay: 0.3 }}
+              className="absolute -top-2 -right-3 bg-white/95 backdrop-blur-xs border border-brand-red/20 rounded-full px-3.5 py-1.5 shadow-sm text-xs font-black font-display text-[#3776AB] flex items-center gap-1.5 select-none hover:scale-110 transition-transform cursor-pointer"
+            >
+              <FaPython className="text-base" /> <span>Python</span>
+            </motion.div>
 
-              {/* Connecting paths */}
-              <motion.path 
-                d="M 200 60 L 200 120" 
-                stroke="#111111" 
-                strokeWidth="1.5" 
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.5, delay: 0.5 }}
-              />
-              <motion.path 
-                d="M 200 120 L 100 180 L 100 240" 
-                stroke="#111111" 
-                strokeWidth="1" 
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, delay: 0.8 }}
-              />
-              <motion.path 
-                d="M 200 120 L 300 180 L 300 240" 
-                stroke="#111111" 
-                strokeWidth="1" 
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, delay: 0.8 }}
-              />
-              <motion.path 
-                d="M 100 240 L 200 310" 
-                stroke="#111111" 
-                strokeWidth="1" 
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.5, delay: 1.2 }}
-              />
-              <motion.path 
-                d="M 300 240 L 200 310" 
-                stroke="#111111" 
-                strokeWidth="1" 
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.5, delay: 1.2 }}
-              />
+            <motion.div
+              animate={{ 
+                y: isHovered ? [0, -7, 0] : [0, -11, 0],
+                rotate: [-4, 4, -4]
+              }}
+              transition={{ repeat: Infinity, duration: 5.2, ease: "easeInOut", delay: 0.6 }}
+              className="absolute bottom-10 -left-6 bg-white/95 backdrop-blur-xs border border-brand-red/20 rounded-full px-3.5 py-1.5 shadow-sm text-xs font-black font-display text-[#2496ED] flex items-center gap-1.5 select-none hover:scale-110 transition-transform cursor-pointer"
+            >
+              <FaDocker className="text-base" /> <span>Docker</span>
+            </motion.div>
 
-              {/* Central Serverless DB connection */}
-              <motion.path 
-                d="M 200 120 L 200 310" 
-                stroke="#B81D24" 
-                strokeWidth="1" 
-                strokeDasharray="4 4"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, delay: 1 }}
-              />
+            <motion.div
+              animate={{ 
+                y: [0, 8, 0], 
+                rotate: [2, -4, 2] 
+              }}
+              transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut", delay: 0.9 }}
+              className="absolute -bottom-3.5 left-8 bg-white/95 backdrop-blur-xs border border-brand-red/20 rounded-full px-3.5 py-1.5 shadow-sm text-xs font-black font-display text-[#569A31] flex items-center gap-1.5 select-none hover:scale-110 transition-transform cursor-pointer"
+            >
+              <FaCloud className="text-base" /> <span>AWS S3</span>
+            </motion.div>
 
-              {/* System nodes */}
-              {/* User Client node */}
-              <circle cx="200" cy="60" r="10" fill="white" stroke="#111111" strokeWidth="2" />
-              <circle cx="200" cy="60" r="3" fill="#111111" />
-              
-              {/* API Gateway / Entry node */}
-              <rect x="175" y="105" width="50" height="30" rx="3" fill="white" stroke="#111111" strokeWidth="1.5" />
-              <line x1="180" y1="120" x2="220" y2="120" stroke="#111111" strokeWidth="1.5" />
-
-              {/* EC2 / Compute node Left */}
-              <rect x="75" y="215" width="50" height="50" rx="4" fill="white" stroke="#111111" strokeWidth="1.5" />
-              <rect x="83" y="223" width="34" height="6" rx="1" fill="#111111" />
-              <rect x="83" y="237" width="34" height="6" rx="1" fill="#111111" />
-              <circle cx="90" cy="253" r="2.5" fill="#B81D24" />
-              <circle cx="100" cy="253" r="2.5" fill="#111111" />
-              <circle cx="110" cy="253" r="2.5" fill="#111111" />
-
-              {/* Lambda / Serverless node Right */}
-              <rect x="275" y="215" width="50" height="50" rx="4" fill="white" stroke="#111111" strokeWidth="1.5" />
-              <path d="M 292 245 L 308 235 M 292 235 L 308 245" stroke="#111111" strokeWidth="1.5" />
-              <circle cx="300" cy="240" r="12" stroke="#111111" strokeWidth="1" strokeDasharray="3 3"/>
-              
-              {/* Storage / S3 / DynamoDB Node Bottom */}
-              <circle cx="200" cy="310" r="16" fill="white" stroke="#B81D24" strokeWidth="1.5" />
-              <line x1="190" y1="305" x2="210" y2="305" stroke="#B81D24" strokeWidth="1.5" />
-              <line x1="190" y1="310" x2="210" y2="310" stroke="#B81D24" strokeWidth="1.5" />
-              <line x1="190" y1="315" x2="210" y2="315" stroke="#B81D24" strokeWidth="1.5" />
-
-              {/* Pulsing signal nodes */}
-              <motion.circle 
-                cx="200" 
-                cy="60" 
-                r="18" 
-                stroke="#111111" 
-                strokeWidth="0.5" 
-                initial={{ scale: 0.6, opacity: 0.8 }}
-                animate={{ scale: 1.4, opacity: 0 }}
-                transition={{ repeat: Infinity, duration: 2.5, ease: "easeOut" }}
-              />
-              <motion.circle 
-                cx="200" 
-                cy="310" 
-                r="24" 
-                stroke="#B81D24" 
-                strokeWidth="0.5" 
-                initial={{ scale: 0.6, opacity: 0.8 }}
-                animate={{ scale: 1.4, opacity: 0 }}
-                transition={{ repeat: Infinity, duration: 3, ease: "easeOut", delay: 1 }}
-              />
-            </svg>
-
-            {/* Micro annotations and technical labels */}
-            <div className="absolute top-8 left-8 font-mono text-[8px] text-text-muted uppercase tracking-wider">
-              CLIENT // ACCESS
-            </div>
-            <div className="absolute top-20 right-8 font-mono text-[8px] text-text-muted uppercase tracking-wider text-right">
-              API GATEWAY<br/>v1.0.4
-            </div>
-            <div className="absolute bottom-[170px] left-8 font-mono text-[8px] text-text-muted uppercase tracking-wider">
-              INSTANCE_POOL<br/>t3.micro // SGP
-            </div>
-            <div className="absolute bottom-[170px] right-8 font-mono text-[8px] text-text-muted uppercase tracking-wider text-right">
-              LAMBDA_TRIGGER<br/>SYS_HANDLER.PY
-            </div>
-            <div className="absolute bottom-8 left-0 right-0 mx-auto text-center font-mono text-[8px] text-brand-red uppercase tracking-wider">
-              PERSISTENCE_LAYER // S3_BUCKET // DYNAMODB
-            </div>
+            <motion.div
+              animate={{ 
+                y: [0, 6, 0], 
+                rotate: [-5, 5, -5] 
+              }}
+              transition={{ repeat: Infinity, duration: 5.5, ease: "easeInOut", delay: 1.1 }}
+              className="absolute -bottom-3 right-4 bg-brand-red text-white rounded-full px-3.5 py-1.5 shadow-md text-xs font-black font-display flex items-center gap-1 select-none rotate-4 hover:scale-110 transition-transform cursor-pointer"
+            >
+              <FaBolt className="text-xs text-amber-300" />
+              <span>Cloud Engineer ⚡</span>
+            </motion.div>
           </motion.div>
         </div>
       </div>

@@ -1,90 +1,166 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FaCloud, FaAws, FaServer, FaPython, FaInfinity } from "react-icons/fa";
+import { FaCloud, FaAws, FaPython, FaGraduationCap } from "react-icons/fa";
 
 export const About: React.FC = () => {
-  const interests = [
+  const highlights = [
     {
-      name: "Cloud Computing",
-      icon: <FaCloud className="w-4 h-4 text-brand-red" />,
-      desc: "Architecting reliable, distributed systems leveraging modern cloud concepts.",
+      name: "Cloud Architectures ☁️",
+      icon: <FaCloud className="w-5 h-5 text-brand-red" />,
+      desc: "Architecting cloud-native pipelines, serverless workflows, and scalable object storage on AWS.",
+      rotate: "rotate-[-1.5deg]",
+      bg: "bg-white",
+      border: "border-brand-red/15 hover:border-brand-red/35",
     },
     {
-      name: "AWS (Amazon Web Services)",
-      icon: <FaAws className="w-4 h-4 text-brand-red" />,
-      desc: "Designing and deploying secure resources like S3, EC2, Lambda, and DynamoDB.",
+      name: "AWS Ecosystem ⚡",
+      icon: <FaAws className="w-5 h-5 text-[#FF9900]" />,
+      desc: "Hands-on with Amazon S3, Lambda, Kinesis, DynamoDB, SNS, CloudWatch, and Boto3 SDKs.",
+      rotate: "rotate-[2deg] sm:translate-y-2",
+      bg: "bg-[#FFF9F6]",
+      border: "border-orange-200/70 hover:border-orange-300",
     },
     {
-      name: "Backend Development",
-      icon: <FaServer className="w-4 h-4 text-brand-red" />,
-      desc: "Creating fast, secure RESTful APIs and structural service integration layers.",
+      name: "Python & Backend 🐍",
+      icon: <FaPython className="w-5 h-5 text-[#3776AB]" />,
+      desc: "Writing clean Python backends with Flask, creating secure REST APIs, and building automation scripts.",
+      rotate: "rotate-[-1deg] sm:translate-y-3",
+      bg: "bg-white",
+      border: "border-blue-200/70 hover:border-blue-300",
     },
     {
-      name: "Python Programming",
-      icon: <FaPython className="w-4 h-4 text-brand-red" />,
-      desc: "Writing clean, robust code for web apps, automation scripts, and analytics.",
-    },
-    {
-      name: "DevOps & Automation",
-      icon: <FaInfinity className="w-4 h-4 text-brand-red" />,
-      desc: "Streamlining development lifecycles with containerization and version control tools.",
+      name: "AI & Data Science 🧠",
+      icon: <FaGraduationCap className="w-5 h-5 text-emerald-600" />,
+      desc: "Applying AI/ML concepts, video analytics with OpenCV, and predictive modeling (Swarm-LSTM).",
+      rotate: "rotate-[1.5deg] sm:translate-y-5",
+      bg: "bg-[#F3FAF7]",
+      border: "border-emerald-200/70 hover:border-emerald-300",
     },
   ];
+
+  // Repeatable bi-directional animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const textItemVariants = {
+    hidden: { opacity: 0, y: 35, scale: 0.96 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.55,
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 35, scale: 0.96 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.55,
+        delay: i * 0.08,
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+      },
+    }),
+  };
 
   return (
     <section 
       id="about" 
-      className="py-24 px-6 md:px-12 bg-bg-warm border-b border-border-hairline relative"
+      className="py-24 px-6 md:px-12 relative overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-        {/* Left Side: Editorial Headline */}
-        <div className="lg:col-span-4 flex flex-col justify-start">
-          <span className="font-mono text-[10px] tracking-widest text-brand-red font-bold mb-4 uppercase">
-            01 // PROFILE
-          </span>
-          <h2 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-text-dark leading-[1.1] mb-6">
-            A little about me.
-          </h2>
-          <div className="w-12 h-[1px] bg-brand-red mb-6 hidden lg:block"></div>
-        </div>
+      {/* Decorative ambient background sparkles */}
+      <div className="absolute top-[20%] right-[8%] text-3xl opacity-15 select-none pointer-events-none">✨</div>
+      <div className="absolute bottom-[15%] left-[6%] text-3xl opacity-15 select-none pointer-events-none">🚀</div>
 
-        {/* Right Side: Narrative and Focus Areas */}
-        <div className="lg:col-span-8 flex flex-col">
-          {/* Main bio text */}
-          <div className="text-base sm:text-lg text-text-dark/90 leading-relaxed font-normal mb-12">
-            I am a focused Cloud Engineer and Python Developer. My passion lies in constructing backend architectures and robust systems that scale seamlessly. I leverage programmatic solutions and cloud infrastructure to solve real-world technical challenges.
-          </div>
+      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+        {/* Left Column: Conversational Story & Resume Summary */}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
+          className="lg:col-span-5 flex flex-col justify-start text-left"
+        >
+          <motion.div 
+            variants={textItemVariants}
+            className="inline-flex items-center gap-1.5 self-start px-3.5 py-1.5 bg-[#FFF0EC] border border-brand-red/15 rounded-full mb-4"
+          >
+            <span className="font-display text-xs font-black text-brand-red">So... who am I? 🤔</span>
+          </motion.div>
+          
+          <motion.h2 
+            variants={textItemVariants}
+            className="font-display text-4xl sm:text-5xl font-black text-text-dark leading-[1.1] mb-6"
+          >
+            A little bit about me.
+          </motion.h2>
 
-          {/* Area of Expertise Checklist - Editorial Row style */}
-          <div className="border-t border-border-hairline pt-10">
-            <h3 className="font-mono text-[10px] tracking-widest text-brand-red font-bold mb-6 uppercase">
-              Core Technical Focus Areas
-            </h3>
-            
-            <div className="divide-y divide-border-hairline">
-              {interests.map((interest, idx) => (
-                <motion.div
-                  key={interest.name}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.6, delay: idx * 0.08 }}
-                  className="py-5 flex flex-col sm:flex-row sm:items-start justify-between gap-4 group hover:bg-white/30 transition-all duration-300 px-2 -mx-2"
-                >
-                  <div className="flex items-center gap-3 sm:w-1/3 flex-shrink-0">
-                    <span className="font-mono text-[10px] text-text-muted/50">0{idx + 1}.</span>
-                    <span className="text-brand-red/90">{interest.icon}</span>
-                    <h4 className="text-sm font-semibold text-text-dark group-hover:text-brand-red transition-colors duration-300">
-                      {interest.name}
-                    </h4>
-                  </div>
-                  <div className="text-sm text-text-muted leading-relaxed sm:w-2/3">
-                    {interest.desc}
-                  </div>
-                </motion.div>
-              ))}
+          <motion.div variants={textItemVariants} className="space-y-4 text-sm sm:text-base text-text-muted leading-relaxed font-medium">
+            <p>
+              I'm <strong className="text-text-dark font-black">Manobala K</strong>, a final-year B.Tech student in <strong className="text-text-dark font-bold">Artificial Intelligence &amp; Data Science</strong> at V.S.B College of Engineering Technical Campus (CGPA: 8.35).
+            </p>
+            <p>
+              I specialize in building <strong className="text-text-dark font-bold">cloud-native applications on AWS using Python and Flask</strong>. Whether it's setting up serverless event streams with Kinesis and Lambda or crafting clean object storage with S3 and MySQL, I focus on turning complex systems into simple, reliable software.
+            </p>
+            <p>
+              Beyond development, I have a published patent in AI-driven temperature forecasting and enjoy exploring modern distributed architectures, automation, and real-time data pipelines.
+            </p>
+          </motion.div>
+
+          {/* Quick Stats Pill */}
+          <motion.div 
+            variants={textItemVariants}
+            className="mt-8 pt-6 border-t border-brand-red/10 flex items-center gap-4 flex-wrap"
+          >
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-2xl border border-brand-red/15 shadow-2xs">
+              <span className="text-brand-red font-black text-sm">🎓 B.Tech AI &amp; DS</span>
+              <span className="text-xs text-text-muted font-bold">(2023–2027)</span>
             </div>
-          </div>
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-2xl border border-brand-red/15 shadow-2xs">
+              <span className="text-emerald-600 font-black text-sm">⭐ CGPA: 8.35</span>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Right Column: Overlapping Rotated Highlight Cards */}
+        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5 relative">
+          {highlights.map((item, idx) => (
+            <motion.div
+              key={item.name}
+              custom={idx}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: false, amount: 0.2 }}
+              className={`p-6 border rounded-[2rem] shadow-xs hover:rotate-0 hover:scale-[1.02] hover:shadow-md transition-all duration-300 group cursor-default select-none ${item.rotate} ${item.bg} ${item.border}`}
+            >
+              {/* Icon container */}
+              <div className="flex-shrink-0 p-3 bg-brand-red/5 text-brand-red rounded-2xl w-11 h-11 flex items-center justify-center mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors duration-300 shadow-2xs">
+                {item.icon}
+              </div>
+              
+              <h3 className="text-base font-black font-display text-text-dark mb-2">
+                {item.name}
+              </h3>
+              
+              <p className="text-xs sm:text-sm text-text-muted leading-relaxed font-medium">
+                {item.desc}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

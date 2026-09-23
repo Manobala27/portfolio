@@ -1,30 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { HiMenu, HiX } from "react-icons/hi";
+
+const NAV_ITEMS = [
+  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
+  { label: "Skills", href: "#skills" },
+  { label: "Experience", href: "#experience" },
+  { label: "Projects", href: "#projects" },
+  { label: "Certifications", href: "#certifications" },
+  { label: "Education", href: "#education" },
+  { label: "Patent", href: "#patent" },
+  { label: "Contact", href: "#contact" },
+];
 
 export const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const navItems = [
-    { label: "About", href: "#about" },
-    { label: "Skills", href: "#skills" },
-    { label: "Projects", href: "#projects" },
-    { label: "Contact", href: "#contact" },
-  ];
+  // Minimal scroll progress bar
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
-  // Highlight active section on scroll
+  // Track active section and scroll state
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 120; // Offset for sticky header
+      setIsScrolled(window.scrollY > 30);
+      const scrollPosition = window.scrollY + 140;
       
-      // Special case for home (top of page)
-      if (window.scrollY < 100) {
+      if (window.scrollY < 80) {
         setActiveSection("home");
         return;
       }
 
-      for (const item of navItems) {
+      for (const item of NAV_ITEMS) {
         const target = document.querySelector(item.href);
         if (target) {
           const top = (target as HTMLElement).offsetTop;
@@ -36,7 +50,7 @@ export const Header: React.FC = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -45,7 +59,7 @@ export const Header: React.FC = () => {
     setIsOpen(false);
     const target = document.querySelector(href);
     if (target) {
-      const headerOffset = 64;
+      const headerOffset = 75;
       const elementPosition = target.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -60,86 +74,117 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-bg-warm/80 backdrop-blur-md border-b border-border-hairline w-full transition-all duration-300">
-      <div className="max-w-6xl mx-auto px-6 md:px-12 h-16 flex items-center justify-between">
-        {/* Brand Logo - Small, minimal, technical */}
-        <a 
-          href="#home" 
-          onClick={(e) => handleNavClick(e, "#home")}
-          className="font-mono text-xs tracking-widest text-text-dark flex items-center gap-2 hover:opacity-80 transition-opacity"
+    <>
+      {/* Subtle Minimal Scroll Progress Indicator */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2.5px] bg-brand-red origin-left z-[60] pointer-events-none"
+        style={{ scaleX }}
+      />
+
+      <header className="fixed top-3 left-0 w-full z-50 px-3 sm:px-6 transition-all duration-300">
+        <div 
+          className={`max-w-5xl mx-auto backdrop-blur-md rounded-full px-4 sm:px-6 h-13 sm:h-14 flex items-center justify-between transition-all duration-300 ${
+            isScrolled 
+              ? "bg-white/85 border border-brand-red/15 shadow-md" 
+              : "bg-white/70 border border-brand-red/10 shadow-xs"
+          }`}
         >
-          <span className="w-1.5 h-1.5 bg-brand-red rounded-full"></span>
-          <span className="font-bold">M. BALA</span>
-          <span className="text-gray-300">/</span>
-          <span className="text-text-muted font-medium">CLOUD ENGINEER</span>
-        </a>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-10">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.href.substring(1);
-            return (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={(e) => handleNavClick(e, item.href)}
-                className={`text-xs font-mono uppercase tracking-widest transition-colors duration-300 relative py-2 ${
-                  isActive ? "text-brand-red" : "text-text-muted hover:text-text-dark"
-                }`}
-              >
-                {item.label}
-                {isActive && (
-                  <motion.span 
-                    layoutId="activeIndicator"
-                    className="absolute bottom-0 left-0 w-full h-[1.5px] bg-brand-red"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-              </a>
-            );
-          })}
-        </nav>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden p-2 text-text-dark hover:text-brand-red focus:outline-none transition-colors"
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <HiX size={20} /> : <HiMenu size={20} />}
-        </button>
-      </div>
-
-      {/* Mobile Dropdown Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-16 left-0 w-full border-b border-border-hairline bg-bg-warm/95 backdrop-blur-md shadow-sm overflow-hidden md:hidden z-40"
+          {/* Brand Logo */}
+          <a 
+            href="#home" 
+            onClick={(e) => handleNavClick(e, "#home")}
+            className="font-display text-sm sm:text-base font-black tracking-tight text-text-dark flex items-center gap-1 hover:scale-105 transition-transform cursor-pointer"
           >
-            <div className="px-6 py-6 flex flex-col space-y-4">
-              {navItems.map((item) => {
-                const isActive = activeSection === item.href.substring(1);
-                return (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
-                    className={`text-xs font-mono uppercase tracking-widest py-2 transition-colors duration-200 block ${
-                      isActive ? "text-brand-red border-l-2 border-brand-red pl-3" : "text-text-muted hover:text-text-dark pl-3"
-                    }`}
-                  >
-                    {item.label}
-                  </a>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+            <span className="text-brand-red">MANO</span>
+            <span className="text-text-dark font-extrabold">BALA</span>
+            <span className="text-sm select-none">👋</span>
+          </a>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-1">
+            {NAV_ITEMS.map((item) => {
+              const isActive = activeSection === item.href.substring(1);
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  className={`text-[11px] font-black font-display uppercase tracking-wider transition-all duration-300 py-1.5 px-3 rounded-full cursor-pointer relative ${
+                    isActive 
+                      ? "bg-brand-red text-white shadow-xs" 
+                      : "text-text-muted hover:text-text-dark hover:bg-brand-red/5"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* Medium Screen Navigation (Highlights) */}
+          <nav className="hidden md:flex lg:hidden items-center space-x-1">
+            {NAV_ITEMS.filter(i => ["Home", "About", "Skills", "Experience", "Projects", "Patent", "Contact"].includes(i.label)).map((item) => {
+              const isActive = activeSection === item.href.substring(1);
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  className={`text-[11px] font-black font-display uppercase tracking-wider transition-all duration-300 py-1.5 px-2.5 rounded-full cursor-pointer relative ${
+                    isActive 
+                      ? "bg-brand-red text-white shadow-xs" 
+                      : "text-text-muted hover:text-text-dark hover:bg-brand-red/5"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden p-2 text-text-dark hover:text-brand-red focus:outline-none transition-colors rounded-full hover:bg-brand-red/5 cursor-pointer"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <HiX size={20} /> : <HiMenu size={20} />}
+          </button>
+        </div>
+
+        {/* Mobile Dropdown Menu */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-16 left-4 right-4 bg-white/95 backdrop-blur-md border border-brand-red/15 shadow-xl rounded-[2rem] p-4 lg:hidden z-40 overflow-hidden"
+            >
+              <div className="grid grid-cols-2 gap-1.5">
+                {NAV_ITEMS.map((item) => {
+                  const isActive = activeSection === item.href.substring(1);
+                  return (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      onClick={(e) => handleNavClick(e, item.href)}
+                      className={`text-xs font-black font-display uppercase tracking-wider py-2.5 px-4 rounded-xl transition-all duration-200 block text-center cursor-pointer ${
+                        isActive 
+                          ? "bg-brand-red text-white shadow-xs" 
+                          : "text-text-muted hover:text-text-dark hover:bg-brand-red/5"
+                      }`}
+                    >
+                      {item.label}
+                    </a>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+    </>
   );
 };
